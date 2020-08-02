@@ -1,6 +1,6 @@
 # CPP-Win32-Bitmap-Water-Effect-DLL
 
-### AutoHotkey v2 Example ([https://www.autohotkey.com/]())
+### AutoHotkey v2 Example (https://www.autohotkey.com/)
 
 ```autohotkey
 #DllLoad waterfx.dll
