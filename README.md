@@ -2,10 +2,11 @@
 
 #### AutoHotkey v2 Example (https://www.autohotkey.com/)
 
-> A 32bpp Bitmap is required.
+> ⚠ A 32bpp device-independent bitmap (DIB) is required.
 
 
 ```autohotkey
+#Requires AutoHotkey v2.0-a119-179d27fd
 #DllLoad waterfx.dll
 
 global wfx := WaterFx.New()
@@ -22,7 +23,7 @@ OnMessage(WM_LBUTTONUP  , "WindowProc")
 OnMessage(WM_RBUTTONDOWN, "WindowProc")
 OnMessage(WM_RBUTTONUP  , "WindowProc")
 
-Wnd := GuiCreate(, Format("WaterFx |⠀{} bits", A_PtrSize))
+Wnd := Gui.New(, Format("WaterFx DEMO | {} bits", 8*A_PtrSize))
 Wnd.OnEvent("Escape", "ExitApp")
 Wnd.OnEvent("Close", "ExitApp")
 
@@ -36,8 +37,8 @@ WindowProc(wParam, lParam, Message, hWnd)
     if !wfx.status
         return
 
-    x := NumGet(&lParam, 0, "Short")
-    y := NumGet(&lParam, 2, "Short")
+    x := lParam & 0xFFFF
+    y := (lParam >> 16) & 0xFFFF
 
     switch Message
     {
