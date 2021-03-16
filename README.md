@@ -6,10 +6,11 @@
 
 
 ```autohotkey
-#Requires AutoHotkey v2.0-a119-179d27fd
+; https://www.autohotkey.com/
+#Requires AutoHotkey v2.0-a129-78d2aa15
 #DllLoad waterfx.dll
 
-global wfx := WaterFx.New()
+global wfx := WaterFx()
 
 global WM_MOUSEMOVE   := 0x0200
 global WM_LBUTTONDOWN := 0x0201
@@ -17,15 +18,15 @@ global WM_LBUTTONUP   := 0x0202
 global WM_RBUTTONDOWN := 0x0204
 global WM_RBUTTONUP   := 0x0205
 
-OnMessage(WM_MOUSEMOVE  , "WindowProc")
-OnMessage(WM_LBUTTONDOWN, "WindowProc")
-OnMessage(WM_LBUTTONUP  , "WindowProc")
-OnMessage(WM_RBUTTONDOWN, "WindowProc")
-OnMessage(WM_RBUTTONUP  , "WindowProc")
+OnMessage(WM_MOUSEMOVE  , WindowProc)
+OnMessage(WM_LBUTTONDOWN, WindowProc)
+OnMessage(WM_LBUTTONUP  , WindowProc)
+OnMessage(WM_RBUTTONDOWN, WindowProc)
+OnMessage(WM_RBUTTONUP  , WindowProc)
 
-Wnd := Gui.New(, Format("WaterFx DEMO | {} bits", 8*A_PtrSize))
-Wnd.OnEvent("Escape", "ExitApp")
-Wnd.OnEvent("Close", "ExitApp")
+Wnd := Gui(, Format("WaterFx DEMO | {} bits", 8*A_PtrSize))
+Wnd.OnEvent("Escape", ExitApp)
+Wnd.OnEvent("Close", ExitApp)
 
 if !wfx.Load(LoadPicture(FileSelect())) || !wfx.Start(Wnd)
     MsgBox("ERROR!"), ExitApp()
