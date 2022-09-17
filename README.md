@@ -7,8 +7,8 @@
 
 ```autohotkey
 ; https://www.autohotkey.com/
-#Requires AutoHotkey v2.0-a129-78d2aa15
-#DllLoad waterfx.dll
+#Requires AutoHotkey v2.0-beta.1
+#DllLoad waterfx64.dll
 
 global wfx := WaterFx()
 
@@ -56,66 +56,61 @@ class WaterFx
 {
     __New()
     {
-        this.id := DllCall("waterfx\create", "Cdecl Ptr")
+        this.dll := A_PtrSize == 4 ? "waterfx" : "waterfx64"
+        this.id := DllCall(this.dll . "\create", "Cdecl Ptr")
         this.status := false
     }
 
     __Delete()
     {
-        DllCall("waterfx\destroy", "Ptr", this.id, "Cdecl")
+        DllCall(this.dll . "\destroy", "Ptr", this.id, "Cdecl")
     }
 
     SetDensity(Density)
     {
-        DllCall("waterfx\set_density", "Ptr", this.id, "Int", Density, "Cdecl")
+        DllCall(this.dll . "\set_density", "Ptr", this.id, "Int", Density, "Cdecl")
     }
 
     SetRenderingDelay(RenderingDelay)
     {
-        DllCall("waterfx\set_delay", "Ptr", this.id, "UInt", RenderingDelay, "Cdecl")
+        DllCall(this.dll . "\set_delay", "Ptr", this.id, "UInt", RenderingDelay, "Cdecl")
     }
 
     Load(hBitmap)  ; DIB 32bpp
     {
-        return DllCall("waterfx\load", "Ptr", this.id, "Ptr", hBitmap, "Cdecl")
+        return DllCall(this.dll . "\load", "Ptr", this.id, "Ptr", hBitmap, "Cdecl")
     }
 
     Clear()
     {
-        DllCall("waterfx\clear", "Ptr", this.id, "Cdecl")
+        DllCall(this.dll . "\clear", "Ptr", this.id, "Cdecl")
     }
 
     Blob(X, Y, Radius := 2, Height := 30)
     {
-        DllCall("waterfx\blob", "Ptr", this.id, "Int", X, "Int", Y, "Int", Radius, "Int", Height, "Cdecl")
+        DllCall(this.dll . "\blob", "Ptr", this.id, "Int", X, "Int", Y, "Int", Radius, "Int", Height, "Cdecl")
     }
 
     Render(hWnd)
     {
-        DllCall("waterfx\render_hwnd", "Ptr", this.id
+        DllCall(this.dll . "\render_hwnd", "Ptr", this.id
             , "Ptr", IsObject(hWnd) ? hWnd.hWnd : hWnd, "Cdecl")
     }
 
     Start(hWnd)
     {
-        return this.status := DllCall("waterfx\start", "Ptr", this.id
+        return this.status := DllCall(this.dll . "\start", "Ptr", this.id
             , "Ptr", IsObject(hWnd) ? hWnd.hWnd : hWnd, "Cdecl Ptr")  ; hThread
     }
 
     Stop()
     {
-        DllCall("waterfx\stop", "Ptr", this.id, "Cdecl")
+        DllCall(this.dll . "\stop", "Ptr", this.id, "Cdecl")
         this.status := false
     }
 
-    Width[]
-    {
-        get => DllCall("waterfx\get_width", "Ptr", this.id, "Cdecl")
-    }
+    Width => DllCall(this.dll . "\get_width", "Ptr", this.id, "Cdecl")
 
-    Height[]
-    {
-        get => DllCall("waterfx\get_height", "Ptr", this.id, "Cdecl")
-    }
+    Height => DllCall(this.dll . "\get_height", "Ptr", this.id, "Cdecl")
 }
 ```
